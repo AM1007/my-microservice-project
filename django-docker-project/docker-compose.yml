@@ -1,0 +1,56 @@
+services:
+  # PostgreSQL база даних
+  db:
+    image: postgres:15
+    container_name: django_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: myproject_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Django веб-застосунок
+  web:
+    build: .
+    container_name: django_app
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=myproject_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - DB_HOST=db
+      - DB_PORT=5432
+    volumes:
+      - static_volume:/app/staticfiles
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    command: ["gunicorn", "--bind", "0.0.0.0:8000", "myproject.wsgi:application"]
+
+  # Nginx веб-сервер
+  nginx:
+    image: nginx:latest
+    container_name: django_nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      - static_volume:/app/staticfiles
+    depends_on:
+      - web
+
+volumes:
+  postgres_data:
+  static_volume:
