@@ -1,6 +1,11 @@
 # Мій власний мікросервісний проєкт  
-Це репозиторій для навчального проєкту в межах курсу "DevOps CI/CD".  
 
-[Завдання 3](./task-3.md)
+## IaC (Terraform)
 
-[Завдання 4](./task-4.md)
+![Screenshot_01](./assets/screenshot%20_1.jpg)
+![Screenshot_02](./assets/screenshot%20_2.jpg)
+![Screenshot_03](./assets/screenshot%20_3.jpg)
+![Screenshot_04](./assets/screenshot%20_4.jpg)
+![Screenshot_05](./assets/screenshot%20_5.jpg)
+![Screenshot_06](./assets/screenshot%20_6.jpg)
+![Screenshot_07](./assets/screenshot%20_7.jpg)
