@@ -1,83 +1,203 @@
-# Django Docker Project - Task 4
+# Django + PostgreSQL + Nginx в Docker 🐳
 
-A simple containerized Django web application with PostgreSQL database and Nginx reverse proxy.
+Багатосервісний веб-проєкт на Django з використанням контейнеризації Docker. Проєкт включає Django веб-застосунок, базу даних PostgreSQL та веб-сервер Nginx для обробки статичних файлів та проксування запитів.
 
-Project Structure
+[На головну](./README.md)
+
+## 🚀 Особливості проєкту
+
+- **Django 4.2+** — сучасний веб-фреймворк Python
+- **PostgreSQL 15** — надійна реляційна база даних
+- **Nginx** — високопродуктивний веб-сервер та зворотний проксі
+- **Docker Compose** — оркестрація багатоконтейнерного застосунку
+- **Gunicorn** — WSGI HTTP-сервер для production
+
+## 📁 Структура проєкту
 
 ```
 django-docker-project/
-├── django_app/           # Django application
-│   ├── myproject/        # Django project settings
-│   └── manage.py         # Django management script
-├── nginx/                # Nginx configuration
-│   └── nginx.conf        # Nginx server config
-├── docker-compose.yml    # Docker services configuration
-├── Dockerfile            # Django container definition
-├── docker-entrypoint.sh  # Container startup script
-└── requirements.txt      # Python dependencies
+├── Dockerfile                 # Образ для Django застосунку
+├── docker-compose.yml         # Конфігурація сервісів
+├── docker-entrypoint.sh       # Скрипт ініціалізації Django
+├── requirements.txt           # Python залежності
+├── django_app/               # Django застосунок
+│   ├── manage.py
+│   └── myproject/
+│       ├── __init__.py
+│       ├── asgi.py
+│       ├── settings.py        # Налаштування Django
+│       ├── urls.py
+│       └── wsgi.py
+└── nginx/
+    └── nginx.conf            # Конфігурація Nginx
 ```
 
-## Features
+## 🛠 Технічні вимоги
 
-Django 4.2+ - Web framework
-PostgreSQL 13 - Database
-Nginx - Reverse proxy and static file server
-Docker Compose - Multi-container orchestration
-Gunicorn - WSGI HTTP Server
+- Docker Engine 20.10+
+- Docker Compose 2.0+
+- Git
 
-## Quick Start
+## ⚡ Швидкий старт
 
-Clone the repository:
+### 1. Клонування репозиторію
 
 ```bash
-git clone <repository-url>
+git clone <your-repository-url>
 cd django-docker-project
 ```
-Build and run the containers:
-bashdocker-compose up -d
 
-Access the application:
-
-Direct Django: http://localhost:8000
-Through Nginx: http://localhost
-`
-
-Stop the containers:
+### 2. Запуск проєкту
 
 ```bash
-bashdocker-compose down
+# Збірка та запуск всіх сервісів
+docker-compose up -d
+
+# Перегляд логів
+docker-compose logs -f
 ```
 
-## Services
+### 3. Перевірка роботи
 
-web - Django application (port 8000)
-db - PostgreSQL database (port 5432)
-nginx - Web server (port 80)
+Відкрийте браузер та перейдіть за адресою: http://localhost
 
-### Environment Variables
-The application uses the following environment variables:
+Ви побачите привітальне повідомлення: "Привіт! Django працює з PostgreSQL та Nginx!"
 
-POSTGRES_DB - Database name (default: myproject_db)
-POSTGRES_USER - Database user (default: postgres)
-POSTGRES_PASSWORD - Database password (default: postgres)
-DB_HOST - Database host (default: db)
-DB_PORT - Database port (default: 5432)
+## 🐘 Робота з базою даних
 
-### Development
-To view logs:
-bashdocker-compose logs web
-To access Django admin:
+### Доступ до PostgreSQL
 
-Create a superuser:
-bashdocker-compose exec web python manage.py createsuperuser
+```bash
+# Підключення до бази даних
+docker-compose exec db psql -U postgres -d myproject_db
 
-Visit http://localhost/admin
+# Виконання міграцій Django
+docker-compose exec web python manage.py migrate
 
-### Tech Stack
+# Створення суперкористувача
+docker-compose exec web python manage.py createsuperuser
+```
 
-Python 3.11
-Django 4.2+
-PostgreSQL 13
-Nginx
-Docker & Docker Compose
-Gunicorn
+### Адміністрування
+
+Доступ до Django Admin: http://localhost/admin/
+
+## 📊 Сервіси проєкту
+
+| Сервіс | Порт | Опис |
+|--------|------|------|
+| `nginx` | 80 | Веб-сервер, статичні файли, проксі |
+| `web` | 8000 | Django застосунок (Gunicorn) |
+| `db` | 5432 | PostgreSQL база даних |
+
+## 🔧 Конфігурація середовища
+
+Основні змінні середовища в `docker-compose.yml`:
+
+```yaml
+environment:
+  - POSTGRES_DB=myproject_db
+  - POSTGRES_USER=postgres
+  - POSTGRES_PASSWORD=postgres
+  - DB_HOST=db
+  - DB_PORT=5432
+```
+
+## 📝 Корисні команди
+
+### Управління контейнерами
+
+```bash
+# Запуск сервісів
+docker-compose up -d
+
+# Зупинка сервісів
+docker-compose down
+
+# Перезбудова образів
+docker-compose build --no-cache
+
+# Перегляд статусу
+docker-compose ps
+```
+
+### Django команди
+
+```bash
+# Виконання міграцій
+docker-compose exec web python manage.py migrate
+
+# Збирання статичних файлів
+docker-compose exec web python manage.py collectstatic
+
+# Доступ до Django shell
+docker-compose exec web python manage.py shell
+```
+
+### Логи та діагностика
+
+```bash
+# Перегляд логів всіх сервісів
+docker-compose logs
+
+# Логи конкретного сервіса
+docker-compose logs web
+docker-compose logs db
+docker-compose logs nginx
+
+# Інтерактивний доступ до контейнера
+docker-compose exec web bash
+```
+
+## 🔒 Безпека та Production
+
+⚠️ **Важливо для production:**
+
+1. **Змініть SECRET_KEY** в `settings.py`
+2. **Встановіть DEBUG = False**
+3. **Налаштуйте ALLOWED_HOSTS**
+4. **Використовуйте змінні середовища** для паролів
+5. **Додайте SSL/TLS** сертифікати
+
+## 🐛 Усунення несправностей
+
+### Перевірка health check PostgreSQL
+
+```bash
+docker-compose exec db pg_isready -U postgres
+```
+
+### Підключення до PostgreSQL не працює
+
+1. Переконайтеся, що контейнер `db` запущений
+2. Перевірте health check статус
+3. Перегляньте логи бази даних
+
+### Nginx не обслуговує статичні файли
+
+1. Виконайте `python manage.py collectstatic`
+2. Перевірте том `static_volume` в docker-compose.yml
+
+## 🤝 Контрибуція
+
+Для покращення проєкту:
+
+1. Створіть форк репозиторію
+2. Створіть feature-гілку: `git checkout -b feature/amazing-feature`
+3. Зафіксуйте зміни: `git commit -m 'Add amazing feature'`
+4. Завантажте зміни: `git push origin feature/amazing-feature`
+5. Створіть Pull Request
+
+## 📜 Ліцензія
+
+Цей проєкт створено в навчальних цілях.
+
+## 📞 Підтримка
+
+Якщо у вас виникли питання або проблеми, створіть Issue в репозиторії.
+
+---
+
+**🎯 Домашнє завдання виконано успішно!** 
+
+Проєкт демонструє правильну контейнеризацію Django застосунку з PostgreSQL та Nginx, готовий до розгортання у production середовищі.
