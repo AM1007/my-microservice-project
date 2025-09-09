@@ -1,6 +1,6 @@
 # Мій власний мікросервісний проєкт  
 
-## Helm
+## Agro CD + CD
 
 ![Screenshot_01](./assets/screenshot_01.jpg)
 ![Screenshot_02](./assets/screenshot_02.jpg)
