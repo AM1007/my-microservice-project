@@ -56,3 +56,37 @@ output "eks_cluster_arn" {
   description = "The Amazon Resource Name (ARN) of the cluster"
   value       = module.eks.cluster_arn
 }
+
+# Jenkins Outputs
+output "jenkins_url" {
+  description = "Jenkins LoadBalancer URL"
+  value       = module.jenkins.jenkins_url
+}
+
+output "jenkins_admin_user" {
+  description = "Jenkins admin username"
+  value       = module.jenkins.jenkins_admin_user
+}
+
+output "jenkins_admin_password" {
+  description = "Jenkins admin password"
+  value       = module.jenkins.jenkins_admin_password
+  sensitive   = true
+}
+
+# Argo CD Outputs
+output "argocd_server_url" {
+  description = "URL to access Argo CD server"
+  value       = module.argocd.argocd_server_url
+}
+
+output "argocd_external_url" {
+  description = "External URL to access Argo CD server (LoadBalancer)"
+  value       = module.argocd.argocd_external_url
+}
+
+output "argocd_admin_password" {
+  description = "Argo CD admin password"
+  value       = module.argocd.argocd_admin_password
+  sensitive   = true
+}
