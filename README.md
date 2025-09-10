@@ -1,6 +1,6 @@
 # Мій власний мікросервісний проєкт  
 
-## Agro CD
+## Створення гнучкого Terraform-модуля для баз даних
 
 ![Screenshot_01](./assets/Screenshot_1.jpg)
 ![Screenshot_02](./assets/Screenshot_2.jpg)
